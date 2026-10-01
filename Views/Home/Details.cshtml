@@ -1,0 +1,57 @@
+@model HospitalAppointmentManagementSystem.Models.Doctor
+
+@{
+    ViewData["Title"] = "Doctor Details & Booking";
+}
+
+<div class="container mt-4 mb-5">
+    <div class="row">
+        <!-- Left Column: Doctor Details -->
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white py-2">
+                    <h5 class="mb-0 fw-bold">Doctor Details</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Doctor ID:</strong> @Model.DoctorId</p>
+                    <p><strong>Name:</strong> @Model.DoctorName</p>
+                    <p><strong>Specialization (Stored in Session):</strong> <span class="badge bg-info text-dark">@ViewBag.Specialization</span></p>
+                    <p><strong>Experience:</strong> @Model.Experience Years</p>
+                    <p><strong>Base Fee:</strong> ₹@Model.ConsultationFee.ToString("N2")</p>
+                    <p class="text-success fw-bold"><strong>Total Charge (via Extension Method):</strong> ₹@Model.CalculateTotalCharge().ToString("N2")</p>
+                    <p class="text-muted small"><em>* Response Caching enabled for 60 seconds on this action.</em></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Appointment Form with Hidden Field and Cookie -->
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white py-2">
+                    <h5 class="mb-0 fw-bold">Book Appointment</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="BookAppointment" method="post">
+                        <!-- Hidden Field to submit DoctorId -->
+                        <input type="hidden" name="hiddenDoctorId" value="@Model.DoctorId" />
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Patient Name (Saved to Cookie):</label>
+                            <input type="text" name="patientName" class="form-control" value="@ViewBag.PatientName" placeholder="Enter patient name" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Appointment Date:</label>
+                            <input type="date" name="appointmentDate" class="form-control" required />
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 fw-bold">Confirm Appointment</button>
+                    </form>
+                </div>
+                <div class="card-footer text-muted small">
+                    * Submits <code>hiddenDoctorId</code> via Hidden Field &amp; persists Patient Name in Browser Cookie.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
